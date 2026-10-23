@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+</head>
+<body style="margin:0; padding:24px 12px; background-color:#f1f4f8; color:#253247; font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:620px; margin:0 auto; background-color:#ffffff; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;">
+        <tr>
+            <td style="padding:24px 32px; text-align:center; background-color:#ffffff; border-bottom:4px solid #1769aa;">
+                <img src="cid:logo-taller" alt="Taller Molina Henze - Mecánica integral" width="220" style="display:block; width:220px; max-width:100%; height:auto; margin:0 auto;">
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:32px;">
+                <p style="margin:0 0 8px; color:#1769aa; font-size:12px; font-weight:bold; letter-spacing:1.2px; text-transform:uppercase;">Taller Molina Henze</p>
+                <h1 style="margin:0 0 20px; color:#172b4d; font-size:25px; line-height:1.3;">{{ titulo }}</h1>
+                <p style="margin:0 0 22px; font-size:15px; line-height:1.7;">Hola{% if nombre_cliente %} {{ nombre_cliente }}{% endif %},</p>
+
+                {% if tipo == "confirmacion_turno" %}
+                    <p style="margin:0 0 20px; font-size:15px; line-height:1.7;">Recibimos correctamente tu solicitud. Te esperamos en el taller en la fecha y horario indicados.</p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse; background-color:#f6f9fc; border:1px solid #e2e8f0;">
+                        <tr><td style="padding:12px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;"><strong>Vehículo:</strong> {{ vehiculo }}</td></tr>
+                        <tr><td style="padding:12px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;"><strong>Patente:</strong> {{ patente }}</td></tr>
+                        <tr><td style="padding:12px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;"><strong>Servicio:</strong> {{ servicio }}</td></tr>
+                        <tr><td style="padding:12px 16px; font-size:14px;"><strong>Fecha y hora:</strong> {{ fecha_turno }}</td></tr>
+                    </table>
+                {% elif tipo == "oferta_turno" %}
+                    <p style="margin:0 0 18px; font-size:15px; line-height:1.7;">Se liberó un horario anterior al de tu turno. Si te resulta conveniente, podés adelantarlo seleccionando el botón de abajo.</p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse; background-color:#f6f9fc; border:1px solid #e2e8f0;">
+                        <tr><td style="padding:12px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;"><strong>Vehículo:</strong> {{ vehiculo }}</td></tr>
+                        <tr><td style="padding:12px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;"><strong>Patente:</strong> {{ patente }}</td></tr>
+                        <tr><td style="padding:12px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;"><strong>Horario disponible:</strong> {{ fecha_disponible }}</td></tr>
+                        <tr><td style="padding:12px 16px; font-size:14px;"><strong>Tu horario actual:</strong> {{ fecha_actual }}</td></tr>
+                    </table>
+                    <p style="margin:24px 0; text-align:center;"><a href="{{ enlace }}" style="display:inline-block; padding:14px 24px; border-radius:6px; background-color:#1769aa; color:#ffffff; font-size:15px; font-weight:bold; text-decoration:none;">Quiero adelantar mi turno</a></p>
+                    <p style="margin:0; color:#64748b; font-size:13px; line-height:1.6;">El horario queda sujeto a disponibilidad y se confirmará al completar la solicitud.</p>
+                {% elif tipo == "adelanto_confirmado" %}
+                    <p style="margin:0 0 20px; font-size:15px; line-height:1.7;">¡Listo! Tu turno fue adelantado correctamente. Este es el nuevo horario confirmado:</p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse; background-color:#f0f8ff; border:1px solid #c8e1f5;">
+                        <tr><td style="padding:14px 16px; border-bottom:1px solid #c8e1f5; font-size:14px;"><strong>Vehículo:</strong> {{ vehiculo }}</td></tr>
+                        <tr><td style="padding:14px 16px; border-bottom:1px solid #c8e1f5; font-size:14px;"><strong>Patente:</strong> {{ patente }}</td></tr>
+                        <tr><td style="padding:14px 16px; font-size:14px;"><strong>Nuevo horario:</strong> {{ fecha_turno }}</td></tr>
+                    </table>
+                {% elif tipo == "presupuesto" %}
+                    <p style="margin:0 0 20px; font-size:15px; line-height:1.7;">Preparamos el presupuesto estimado para tu vehículo. Revisá el detalle y confirmá si autorizás la reparación.</p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse; background-color:#f6f9fc; border:1px solid #e2e8f0;">
+                        <tr><td style="padding:12px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;"><strong>Vehículo:</strong> {{ vehiculo }} — <strong>Patente:</strong> {{ patente }}</td></tr>
+                        <tr><td style="padding:16px;">
+                            <strong style="font-size:14px;">Repuestos estimados</strong>
+                            {% if repuestos %}
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:8px; border-collapse:collapse;">
+                                    {% for repuesto in repuestos %}
+                                        <tr>
+                                            <td style="padding:8px 4px; border-bottom:1px solid #e2e8f0; font-size:13px;">{{ repuesto.nombre }} ({{ repuesto.cantidad }} × ${{ repuesto.precio_unitario|floatformat:2 }})</td>
+                                            <td align="right" style="padding:8px 4px; border-bottom:1px solid #e2e8f0; font-size:13px;">${{ repuesto.subtotal|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% else %}
+                                <p style="margin:8px 0 0; color:#64748b; font-size:13px;">No se cargaron repuestos.</p>
+                            {% endif %}
+                        </td></tr>
+                        <tr><td style="padding:10px 16px; border-top:1px solid #e2e8f0; font-size:14px;"><strong>Mano de obra:</strong> ${{ mano_obra|floatformat:2 }}</td></tr>
+                        <tr><td style="padding:16px; background-color:#eaf3fb; color:#124c7c; font-size:18px;"><strong>Total estimado: ${{ total|floatformat:2 }}</strong></td></tr>
+                    </table>
+                    <p style="margin:20px 0 8px; font-size:14px;"><strong>Observaciones</strong></p>
+                    <p style="margin:0; color:#475569; font-size:14px; line-height:1.6; white-space:pre-line;">{{ observaciones }}</p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px auto 0;">
+                        <tr>
+                            <td style="padding:0 6px;"><a href="{{ aceptar_url }}" style="display:inline-block; padding:12px 18px; border-radius:6px; background-color:#218838; color:#ffffff; font-size:14px; font-weight:bold; text-decoration:none;">Aceptar presupuesto</a></td>
+                            <td style="padding:0 6px;"><a href="{{ rechazar_url }}" style="display:inline-block; padding:12px 18px; border-radius:6px; background-color:#ffffff; border:1px solid #cbd5e1; color:#334155; font-size:14px; font-weight:bold; text-decoration:none;">Rechazar</a></td>
+                        </tr>
+                    </table>
+                    <p style="margin:20px 0 0; color:#64748b; font-size:13px; line-height:1.6;">La reparación no se autorizará hasta que confirmes tu decisión.</p>
+                {% elif tipo == "presupuesto_final" %}
+                    <p style="margin:0 0 20px; font-size:15px; line-height:1.7;">Finalizamos la reparación de tu vehículo. A continuación, te compartimos el detalle del trabajo y el importe final.</p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse; background-color:#f6f9fc; border:1px solid #e2e8f0;">
+                        <tr><td style="padding:12px 16px; border-bottom:1px solid #e2e8f0; font-size:14px;"><strong>Vehículo:</strong> {{ vehiculo }} — <strong>Patente:</strong> {{ patente }}</td></tr>
+                        <tr><td style="padding:16px;">
+                            <strong style="font-size:14px;">Repuestos utilizados</strong>
+                            {% if repuestos %}
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:8px; border-collapse:collapse;">
+                                    {% for repuesto in repuestos %}
+                                        <tr>
+                                            <td style="padding:8px 4px; border-bottom:1px solid #e2e8f0; font-size:13px;">{{ repuesto.nombre }} ({{ repuesto.cantidad }} × ${{ repuesto.precio_unitario|floatformat:2 }})</td>
+                                            <td align="right" style="padding:8px 4px; border-bottom:1px solid #e2e8f0; font-size:13px;">${{ repuesto.subtotal|floatformat:2 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% else %}
+                                <p style="margin:8px 0 0; color:#64748b; font-size:13px;">No se registraron repuestos utilizados.</p>
+                            {% endif %}
+                        </td></tr>
+                        <tr><td style="padding:10px 16px; border-top:1px solid #e2e8f0; font-size:14px;"><strong>Mano de obra final:</strong> ${{ mano_obra|floatformat:2 }}</td></tr>
+                        <tr><td style="padding:16px; background-color:#eaf3fb; color:#124c7c; font-size:18px;"><strong>Total final: ${{ total|floatformat:2 }}</strong></td></tr>
+                    </table>
+                    <p style="margin:20px 0 8px; font-size:14px;"><strong>Detalle del trabajo</strong></p>
+                    <p style="margin:0; color:#475569; font-size:14px; line-height:1.6; white-space:pre-line;">{{ detalle }}</p>
+                {% endif %}
+
+                <p style="margin:28px 0 0; font-size:14px; line-height:1.7;">Gracias por confiar en nosotros.<br><strong>Equipo Taller Molina Henze</strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:16px 24px; background-color:#172b4d; color:#dbe7f3; text-align:center; font-size:12px; line-height:1.6;">Mecánica integral<br>Este mensaje fue enviado por Taller Molina Henze.</td>
+        </tr>
+    </table>
+</body>
+</html>
